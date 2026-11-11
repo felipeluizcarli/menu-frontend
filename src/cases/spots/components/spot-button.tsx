@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@base-ui/react";
 import type { SpotDTO } from "../dtos/spot.dto";
 
-
 export function SpotButton() {
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -16,10 +15,9 @@ export function SpotButton() {
 
   function handleSelect(spot: SpotDTO) {
     localStorage.setItem('spot', JSON.stringify(spot));
-      setSelectedSpot(spot);
-      setDialogOpen(false);
+    setSelectedSpot(spot);
+    setDialogOpen(false);
   }
-
 
   return (
     <div className="flex items-center justify-center">
@@ -30,13 +28,13 @@ export function SpotButton() {
         onClick={() => setDialogOpen(true)}
       >
         <MapPin className="size-6" />
-        {selectedSpot ? selectedSpot.name : "Selecionar Mesa"}
+        { selectedSpot ? selectedSpot.name : 'Selecionar Mesa'}        
       </Button>
 
       <SpotDialog 
-      open={dialogOpen} 
-      onSelect={handleSelect}
-      selectedSpotId={selectedSpot?.id}
+        open={dialogOpen} 
+        onSelect={handleSelect}
+        selectedSpotId={selectedSpot?.id}
       />
     </div>
   )

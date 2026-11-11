@@ -1,6 +1,6 @@
-export interface CategoryDto {
-    id: string;
-    name: string;
-    active: boolean;
-    icon: string;
+export interface CategoryDTO {
+  id: string;
+  name: string;
+  active: boolean;
+  icon?: string;
 }

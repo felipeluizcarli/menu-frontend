@@ -1,45 +1,73 @@
-
-import { Link } from "react-router-dom";
-import { useCategories } from "../hooks/use-category";
 import { cn } from "@/lib/utils";
+import { useCategories } from "../hooks/use-category";
+import { Link, useSearchParams } from "react-router-dom";
 import { Utensils } from "lucide-react";
 
 export function CategoryNav() {
-    const { data: categories = [] } = useCategories();
+  const [searchParams] = useSearchParams();
+  const selectedCategoryId = searchParams.get("categoryId");
 
+  const {
+    data: categories = [],
+    isLoading,
+    isError,
+  } = useCategories();
+
+  console.log("Categorias recebidas:", categories);
+
+  if (isLoading) {
+    return <p className="p-5">Carregando categorias...</p>;
+  }
+
+  if (isError) {
     return (
-        <nav className="w-full">
-            <ul className="overflow-hidden rounded-xl border border-border/70 bg-transparent">
-                {categories.map((category) => (
-                    <li
-                        key={category.id}
-                        className="relative"
-                    >
-                        <Link
-                            to={`/products?categoryid=${category.id}`}
-                            className={cn(
-                                "relative flex w-full items-center gap-3 px-5 py-5",
-                                "font-menu text-lg font-semibold uppercase tracking-tight",
-                                "border-xl border-transparent",
-                                "transition-colors duration-200",
-                                "hover:z-10 hover:text-[#B86A2C]"
-                            )}
-                        >
-                            {category.icon ? (
-                                <span>{category.icon}</span>
-                            ) : (
-                                <Utensils
-                                    className="size-10 text-brand"
-                                />
-                            )}
-
-                            <span className="leading-tight">
-                                {category.name}
-                            </span>
-                        </Link>
-                    </li>
-                ))}
-            </ul>
-        </nav>
+      <p className="p-5 text-red-500">
+        Erro ao carregar categorias.
+      </p>
     );
+  }
+
+  return (
+    <nav className="w-full">
+      <ul className="overflow-hidden rounded-xl border border-border/70 bg-transparent">
+        {categories.map((category) => (
+          <li key={category.id} className="relative">
+            <Link
+              to={`/products?categoryId=${category.id}`}
+              className={cn(
+                "relative flex w-full items-center gap-3 px-5 py-5",
+                "font-menu text-lg font-semibold uppercase tracking-tight",
+                "rounded-xl border border-transparent",
+                "transition-colors duration-200",
+                "hover:z-10 hover:text-[#B86A2C]",
+                selectedCategoryId === category.id
+                  ? "border-[#B86A2C] bg-primary/5 text-[#B86A2C]"
+                  : "text-foreground border-b-border/60"
+              )}
+            >
+              {category.icon ? (
+                <img
+                  src={category.icon}
+                  alt={category.name}
+                  className="size-10 object-contain"
+                />
+              ) : (
+                <Utensils className="size-10 text-brand" />
+              )}
+
+              <span className="leading-tight">
+                {category.name}
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+
+      {categories.length === 0 && (
+        <p className="p-5 text-center text-muted-foreground">
+          Nenhuma categoria encontrada.
+        </p>
+      )}
+    </nav>
+  );
 }
